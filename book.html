@@ -37,6 +37,22 @@
     <script
         type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Pedestal AI","url":"https://www.pedestal.ai","logo":"https://www.pedestal.ai/logo.png","description":"Pedestal is AI for complex operations. It reads your ERP, TMS and email, asks your experts the rest, and takes reports, forecasts and manual work off your team’s plate. Your team builds the agents, or Pedestal’s logistics experts build them for you. It runs in your cloud, follows your access rules and keeps a record of what it does.","slogan":"AI for complex operations","foundingDate":"2024","sameAs":["https://x.com/pedestalai"],"knowsAbout":["AI analyst automation","supply chain AI agents","decision intelligence","enterprise context layer for AI agents","semantic layer","AI accuracy evaluation and validation","agentic workflow automation","conversational analytics","document intelligence","AI customer coordination","warehouse-native AI (Snowflake, Databricks, BigQuery, Microsoft Fabric)"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","url":"https://www.pedestal.ai/book"},"offers":{"@type":"Offer","category":"Software","name":"Pedestal AI Platform","description":"Agents that learn your systems and your experts, then send finished work: reports, forecasts and entered orders. SOC 2 compliant. Runs in your cloud on AWS, Azure or Google Cloud, with Snowflake and Databricks."}}</script>
     <script src="https://www.pedestal.ai/_next/static/chunks/a6dad97d9634a72d.js?dpl=dpl_GuEi4HD4dHKR3zmHNEiCS5qJzbwB" noModule=""></script>
+    <style>
+        html:not([data-header-scrolled]) header[role="banner"][data-state="inactive"] > div {
+            background-color: transparent;
+            border-color: transparent;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+        }
+
+        html[data-header-scrolled] header[role="banner"][data-state="inactive"] > div {
+            background-color: rgba(255, 255, 255, 0.85);
+            background-color: color-mix(in oklab, var(--page-bg, #fff) 85%, transparent);
+            border-color: var(--hairline, #16354c14);
+            -webkit-backdrop-filter: blur(var(--blur-md, 12px));
+            backdrop-filter: blur(var(--blur-md, 12px));
+        }
+    </style>
 </head>
 
 <body class="antialiased overflow-x-clip">
@@ -141,6 +157,17 @@
             </div>
         </div>
     </header>
+    <script>
+        (() => {
+            function syncHeaderScrollState() {
+                document.documentElement.toggleAttribute("data-header-scrolled", window.scrollY > 50);
+            }
+
+            window.addEventListener("scroll", syncHeaderScrollState, { passive: true });
+            window.addEventListener("pageshow", syncHeaderScrollState);
+            syncHeaderScrollState();
+        })();
+    </script>
     <div id="main-content" tabindex="-1" class="outline-none">
         <main class="overflow-x-hidden bg-[var(--page-bg)] [font-optical-sizing:auto]">
             <section class="relative pt-32 pb-24 md:pt-40 md:pb-32">
