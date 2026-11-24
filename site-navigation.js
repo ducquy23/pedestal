@@ -1,5 +1,22 @@
 (() => {
     const siteRoot = new URL(".", document.currentScript.src);
+    const usesHtmlPaths = location.protocol === "file:" || location.pathname.endsWith(".html") ||
+        Array.from(document.scripts).some(script => script.textContent.includes("IsThisFirstTime_Log_From_LiveServer"));
+
+    function pageUrl(path) {
+        const url = new URL(path.slice(1), siteRoot);
+        if (usesHtmlPaths) {
+            url.pathname += url.pathname === siteRoot.pathname ? "index.html" : ".html";
+        }
+        return url.href;
+    }
+
+    if (usesHtmlPaths) {
+        for (const link of document.querySelectorAll('a[href^="/"]:not([href^="//"])')) {
+            link.href = pageUrl(link.getAttribute("href"));
+        }
+    }
+
     const navigation = document.querySelector('header[role="banner"] nav[data-slot="navigation-menu"]');
     if (!navigation) return;
 
@@ -7,26 +24,26 @@
         Platform: {
             heading: "The Pedestal platform",
             links: [
-                ["Predictions", "product/predictions.html", "Build models, put them to work, keep them current"],
-                ["Intelligence", "product/intelligence.html", "Ask questions and investigate your operation"],
-                ["Knowledge", "product/knowledge.html", "The knowledge graph, kept fresh"],
+                ["Predictions", "/product/predictions", "Build models, put them to work, keep them current"],
+                ["Intelligence", "/product/intelligence", "Ask questions and investigate your operation"],
+                ["Knowledge", "/product/knowledge", "The knowledge graph, kept fresh"],
             ],
         },
         Verticals: {
             heading: "Verticals",
             links: [
-                ["Supply Chain & Logistics", "verticals/supply-chain-logistics.html"],
-                ["Manufacturing", "verticals/manufacturing.html"],
-                ["Retail", "verticals/retail.html"],
+                ["Supply Chain & Logistics", "/verticals/supply-chain-logistics"],
+                ["Manufacturing", "/verticals/manufacturing"],
+                ["Retail", "/verticals/retail"],
             ],
         },
         "Case studies": {
             heading: "Case studies",
             links: [
-                ["Fortune 500 Ecommerce Home Retailer", "customers/ecommerce-home-retailer.html"],
-                ["Maersk", "customers/maersk.html"],
-                ["Automotive Parts Manufacturer", "customers/automotive-parts-manufacturer.html"],
-                ["Paper-Goods Manufacturer", "customers/marcal.html"],
+                ["Fortune 500 Ecommerce Home Retailer", "/customers/ecommerce-home-retailer"],
+                ["Maersk", "/customers/maersk"],
+                ["Automotive Parts Manufacturer", "/customers/automotive-parts-manufacturer"],
+                ["Paper-Goods Manufacturer", "/customers/marcal"],
             ],
         },
     };
@@ -73,7 +90,7 @@
         for (const [label, path, description] of group.links) {
             const row = document.createElement("li");
             const link = document.createElement("a");
-            link.href = new URL(path, siteRoot).href;
+            link.href = pageUrl(path);
             link.textContent = label;
             if (link.href === location.href.split(/[?#]/, 1)[0]) link.setAttribute("aria-current", "page");
             if (description) {
