@@ -11,6 +11,11 @@
     display: none;
 }
 
+#site-navigation-case-studies {
+    inset-inline: auto 0;
+    width: min(360px, calc(100vw - 2rem));
+}
+
 .site-navigation-card {
     padding: 8px;
     border: 1px solid var(--hairline, #16354c14);
@@ -28,6 +33,14 @@
     font-size: 13px;
     font-weight: 500;
     line-height: 20px;
+}
+
+#site-navigation-case-studies .site-navigation-section p {
+    padding-bottom: 4px;
+}
+
+.site-navigation-section + .site-navigation-section {
+    margin-top: 7px;
 }
 
 .site-navigation-card ul {

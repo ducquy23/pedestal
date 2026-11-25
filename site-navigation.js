@@ -20,39 +20,79 @@
     const navigation = document.querySelector('header[role="banner"] nav[data-slot="navigation-menu"]');
     if (!navigation) return;
 
-    const platformIcons = {
+    const icons = {
         predictions: '<path d="M3 13l5-5 4 4 9-9M5 17v4m4-7v7m4-5v5m4-8v8m4-12v12"/>',
         intelligence: '<path d="M12 5a3 3 0 0 0-6-1 4 4 0 0 0-2 6 4 4 0 0 0 0 7 4 4 0 0 0 8 1V5ZM6 4a3 3 0 0 0 1 3m-3 3a4 4 0 0 1 2-1m-2 8a4 4 0 0 1 2-2m6-2a3 3 0 0 0-3-3m3 4h6m-6-4h6l2-2m-8-2h3l2-3m-5 15h6l2 2"/><circle cx="17" cy="3" r=".5"/><circle cx="20" cy="8" r=".5"/><circle cx="18" cy="14" r=".5"/><circle cx="20" cy="20" r=".5"/>',
         knowledge: '<rect x="9" y="2" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/><path d="M12 8v4m-7 4v-4h14v4"/>',
+        truck: '<path d="M14 18V6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h2m4 0h6m4 0h2a1 1 0 0 0 1-1v-3l-3-5h-5"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/>',
+        factory: '<path d="M3 20V4h4v9l5-3v3l5-3v3l4-3v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm6-3h.01m3.99 0h.01m3.99 0h.01"/>',
+        bag: '<rect x="3" y="6" width="18" height="16" rx="2"/><path d="m3.6 6.8 2.8-4A2 2 0 0 1 8 2h8a2 2 0 0 1 1.6.8l2.8 4M16 10a4 4 0 0 1-8 0"/>',
+        ship: '<path d="M12 2v3M5 13V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6M4 19l-2-5 10-4 10 4-2 5m-8-9v6M2 21c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2"/>',
+        boxes: '<path d="m12 2 5 3v6l-5 3-5-3V5l5-3Zm0 6 5-3m-5 3L7 5m5 3v6M7 10l-5 3v6l5 3 5-3v-5M2 13l5 3 5-2m-5 2v6m10-12 5 3v6l-5 3-5-3m0-5 5 2 5-3m-5 3v6"/>',
+        file: '<path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 0v6h6M8 10h2m-2 4h8m-8 4h8"/>',
     };
 
     const menus = {
-        Platform: {
+        Platform: [{
             heading: "The Pedestal platform",
             links: [
-                ["Predictions", "/product/predictions", "Build models, put them to work, keep them current", platformIcons.predictions],
-                ["Intelligence", "/product/intelligence", "Ask questions and investigate your operation", platformIcons.intelligence],
-                ["Knowledge", "/product/knowledge", "The knowledge graph, kept fresh", platformIcons.knowledge],
+                ["Predictions", "/product/predictions", "Build models, put them to work, keep them current", icons.predictions],
+                ["Intelligence", "/product/intelligence", "Ask questions and investigate your operation", icons.intelligence],
+                ["Knowledge", "/product/knowledge", "The knowledge graph, kept fresh", icons.knowledge],
             ],
-        },
-        Verticals: {
-            heading: "Verticals",
+        }],
+        Verticals: [{
+            heading: "Built for your industry",
             links: [
-                ["Supply Chain & Logistics", "/verticals/supply-chain-logistics"],
-                ["Manufacturing", "/verticals/manufacturing"],
-                ["Retail", "/verticals/retail"],
+                ["Supply Chain & Logistics", "/verticals/supply-chain-logistics", "Visibility across carriers, lanes, and handoffs", icons.truck],
+                ["Manufacturing", "/verticals/manufacturing", "Plant-level knowledge as governed agents", icons.factory],
+                ["Retail", "/verticals/retail", "High-volume coordination at last-mile", icons.bag],
             ],
-        },
-        "Case studies": {
-            heading: "Case studies",
-            links: [
-                ["Fortune 500 Ecommerce Home Retailer", "/customers/ecommerce-home-retailer"],
-                ["Maersk", "/customers/maersk"],
-                ["Automotive Parts Manufacturer", "/customers/automotive-parts-manufacturer"],
-                ["Paper-Goods Manufacturer", "/customers/marcal"],
-            ],
-        },
+        }],
+        "Case studies": [
+            {
+                heading: "Retail & E-commerce",
+                links: [
+                    ["Fortune 500 home retailer", "/customers/ecommerce-home-retailer", "Voice and SMS agents at delivery scale", icons.bag],
+                ],
+            },
+            {
+                heading: "Transportation & Logistics",
+                links: [
+                    ["Maersk", "/customers/maersk", "Years of expertise, ready to query", icons.ship],
+                ],
+            },
+            {
+                heading: "Manufacturing",
+                links: [
+                    ["Automotive parts manufacturer", "/customers/automotive-parts-manufacturer", "Multi-OEM documents, validated at volume", icons.boxes],
+                    ["Marcal Paper", "/customers/marcal", "From ERP data to executive intelligence", icons.file],
+                ],
+            },
+        ],
     };
+
+    function createMenuLink([label, path, description, iconMarkup]) {
+        const row = document.createElement("li");
+        const link = document.createElement("a");
+        const icon = document.createElement("span");
+        const copy = document.createElement("span");
+        const detail = document.createElement("span");
+        link.className = "site-navigation-feature";
+        link.href = pageUrl(path);
+        if (link.href === location.href.split(/[?#]/, 1)[0]) link.setAttribute("aria-current", "page");
+        icon.className = "site-navigation-icon";
+        icon.setAttribute("aria-hidden", "true");
+        icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconMarkup}</svg>`;
+        copy.className = "site-navigation-copy";
+        copy.textContent = label;
+        detail.className = "site-navigation-description";
+        detail.textContent = description;
+        copy.append(detail);
+        link.append(icon, copy);
+        row.append(link);
+        return row;
+    }
 
     let openMenu;
 
@@ -75,47 +115,31 @@
     }
 
     for (const trigger of navigation.querySelectorAll('[data-slot="navigation-menu-trigger"]')) {
-        const group = menus[trigger.textContent.trim()];
-        if (!group) continue;
+        const name = trigger.textContent.trim();
+        const sections = menus[name];
+        if (!sections) continue;
 
         const item = trigger.closest("li");
         const dropdown = document.createElement("div");
         const card = document.createElement("div");
-        const heading = document.createElement("p");
-        const links = document.createElement("ul");
         dropdown.className = "site-navigation-dropdown";
-        dropdown.id = "site-navigation-" + group.heading.toLowerCase().replaceAll(" ", "-");
+        dropdown.id = "site-navigation-" + name.toLowerCase().replaceAll(" ", "-");
         dropdown.hidden = true;
         card.className = "site-navigation-card";
-        heading.textContent = group.heading;
-        card.append(heading, links);
         dropdown.append(card);
         trigger.setAttribute("aria-controls", dropdown.id);
         item.append(dropdown);
 
-        for (const [label, path, description, iconMarkup] of group.links) {
-            const row = document.createElement("li");
-            const link = document.createElement("a");
-            link.href = pageUrl(path);
-            link.textContent = label;
-            if (link.href === location.href.split(/[?#]/, 1)[0]) link.setAttribute("aria-current", "page");
-            if (iconMarkup) {
-                const icon = document.createElement("span");
-                const copy = document.createElement("span");
-                const detail = document.createElement("span");
-                link.className = "site-navigation-feature";
-                icon.className = "site-navigation-icon";
-                icon.setAttribute("aria-hidden", "true");
-                icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconMarkup}</svg>`;
-                copy.className = "site-navigation-copy";
-                copy.textContent = label;
-                detail.className = "site-navigation-description";
-                detail.textContent = description;
-                copy.append(detail);
-                link.replaceChildren(icon, copy);
-            }
-            row.append(link);
-            links.append(row);
+        for (const { heading, links } of sections) {
+            const section = document.createElement("div");
+            const title = document.createElement("p");
+            const list = document.createElement("ul");
+            section.className = "site-navigation-section";
+            title.textContent = heading;
+            list.setAttribute("aria-label", heading);
+            list.append(...links.map(createMenuLink));
+            section.append(title, list);
+            card.append(section);
         }
 
         const menu = { trigger, dropdown };
@@ -136,7 +160,7 @@
             if (event.key !== "ArrowDown") return;
             event.preventDefault();
             showMenu(menu);
-            links.querySelector("a").focus();
+            card.querySelector("a").focus();
         });
     }
 
