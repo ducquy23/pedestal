@@ -225,6 +225,10 @@
         padding-inline: 4px;
     }
 
+    #mobile-navigation .site-navigation-section:only-child .site-navigation-description {
+        max-inline-size: 35ch;
+    }
+
     #mobile-navigation > div:last-child {
         display: block;
         width: 100%;
