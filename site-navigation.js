@@ -17,8 +17,13 @@
         }
     }
 
-    const navigation = document.querySelector('header[role="banner"] nav[data-slot="navigation-menu"]');
+    const header = document.querySelector('header[role="banner"]');
+    const navigation = header?.querySelector('nav[data-slot="navigation-menu"]');
     if (!navigation) return;
+
+    const mobileToggle = header.querySelector('button[aria-controls="mobile-navigation"]');
+    const mobilePanel = navigation.parentElement;
+    const mobileLayout = window.matchMedia("(width < 64rem)");
 
     const icons = {
         predictions: '<path d="M3 13l5-5 4 4 9-9M5 17v4m4-7v7m4-5v5m4-8v8m4-12v12"/>',
@@ -114,6 +119,30 @@
         menu.dropdown.hidden = false;
     }
 
+    function setMobileOpen(open) {
+        if (!mobileToggle) return;
+        if (!open) closeMenu();
+        header.classList.toggle("site-navigation-mobile-open", open);
+        if (open) mobilePanel.scrollTop = 0;
+        mobileToggle.setAttribute("aria-expanded", String(open));
+        mobileToggle.setAttribute("aria-label", open ? "Close Menu" : "Open Menu");
+    }
+
+    if (mobileToggle) {
+        mobilePanel.id = "mobile-navigation";
+        mobileToggle.classList.add("site-navigation-mobile-toggle");
+        mobileToggle.addEventListener("click", () => {
+            setMobileOpen(mobileToggle.getAttribute("aria-expanded") !== "true");
+        });
+        mobilePanel.addEventListener("click", event => {
+            if (mobileLayout.matches && event.target.closest("a")) setMobileOpen(false);
+        });
+        header.addEventListener("focusout", event => {
+            if (mobileLayout.matches && event.relatedTarget && !header.contains(event.relatedTarget)) setMobileOpen(false);
+        });
+        mobileLayout.addEventListener("change", () => setMobileOpen(false));
+    }
+
     for (const trigger of navigation.querySelectorAll('[data-slot="navigation-menu-trigger"]')) {
         const name = trigger.textContent.trim();
         const sections = menus[name];
@@ -144,13 +173,13 @@
 
         const menu = { trigger, dropdown };
         item.addEventListener("pointerenter", event => {
-            if (event.pointerType === "mouse") showMenu(menu);
+            if (!mobileLayout.matches && event.pointerType === "mouse") showMenu(menu);
         });
         item.addEventListener("pointerleave", event => {
-            if (event.pointerType === "mouse" && openMenu === menu && !dropdown.contains(document.activeElement)) closeMenu();
+            if (!mobileLayout.matches && event.pointerType === "mouse" && openMenu === menu && !dropdown.contains(document.activeElement)) closeMenu();
         });
         item.addEventListener("focusout", event => {
-            if (openMenu === menu && !item.contains(event.relatedTarget) && !item.matches(":hover")) closeMenu();
+            if (!mobileLayout.matches && openMenu === menu && !item.contains(event.relatedTarget) && !item.matches(":hover")) closeMenu();
         });
         trigger.addEventListener("click", () => {
             if (openMenu === menu) closeMenu();
@@ -165,12 +194,21 @@
     }
 
     document.addEventListener("pointerdown", event => {
-        if (openMenu && !openMenu.trigger.closest("li").contains(event.target)) closeMenu();
+        if (mobileLayout.matches) {
+            if (!header.contains(event.target)) setMobileOpen(false);
+        } else if (openMenu && !openMenu.trigger.closest("li").contains(event.target)) {
+            closeMenu();
+        }
     });
     document.addEventListener("keydown", event => {
-        if (!openMenu || event.key !== "Escape") return;
-        const { trigger, dropdown } = openMenu;
-        if (dropdown.contains(document.activeElement)) trigger.focus();
-        closeMenu();
+        if (event.key !== "Escape") return;
+        if (openMenu) {
+            const { trigger, dropdown } = openMenu;
+            if (dropdown.contains(document.activeElement)) trigger.focus();
+            closeMenu();
+        } else if (mobileToggle?.getAttribute("aria-expanded") === "true") {
+            setMobileOpen(false);
+            mobileToggle.focus();
+        }
     });
 })();
