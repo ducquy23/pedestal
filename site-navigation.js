@@ -20,13 +20,19 @@
     const navigation = document.querySelector('header[role="banner"] nav[data-slot="navigation-menu"]');
     if (!navigation) return;
 
+    const platformIcons = {
+        predictions: '<path d="M3 13l5-5 4 4 9-9M5 17v4m4-7v7m4-5v5m4-8v8m4-12v12"/>',
+        intelligence: '<path d="M12 5a3 3 0 0 0-6-1 4 4 0 0 0-2 6 4 4 0 0 0 0 7 4 4 0 0 0 8 1V5ZM6 4a3 3 0 0 0 1 3m-3 3a4 4 0 0 1 2-1m-2 8a4 4 0 0 1 2-2m6-2a3 3 0 0 0-3-3m3 4h6m-6-4h6l2-2m-8-2h3l2-3m-5 15h6l2 2"/><circle cx="17" cy="3" r=".5"/><circle cx="20" cy="8" r=".5"/><circle cx="18" cy="14" r=".5"/><circle cx="20" cy="20" r=".5"/>',
+        knowledge: '<rect x="9" y="2" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/><path d="M12 8v4m-7 4v-4h14v4"/>',
+    };
+
     const menus = {
         Platform: {
             heading: "The Pedestal platform",
             links: [
-                ["Predictions", "/product/predictions", "Build models, put them to work, keep them current"],
-                ["Intelligence", "/product/intelligence", "Ask questions and investigate your operation"],
-                ["Knowledge", "/product/knowledge", "The knowledge graph, kept fresh"],
+                ["Predictions", "/product/predictions", "Build models, put them to work, keep them current", platformIcons.predictions],
+                ["Intelligence", "/product/intelligence", "Ask questions and investigate your operation", platformIcons.intelligence],
+                ["Knowledge", "/product/knowledge", "The knowledge graph, kept fresh", platformIcons.knowledge],
             ],
         },
         Verticals: {
@@ -87,16 +93,26 @@
         trigger.setAttribute("aria-controls", dropdown.id);
         item.append(dropdown);
 
-        for (const [label, path, description] of group.links) {
+        for (const [label, path, description, iconMarkup] of group.links) {
             const row = document.createElement("li");
             const link = document.createElement("a");
             link.href = pageUrl(path);
             link.textContent = label;
             if (link.href === location.href.split(/[?#]/, 1)[0]) link.setAttribute("aria-current", "page");
-            if (description) {
+            if (iconMarkup) {
+                const icon = document.createElement("span");
+                const copy = document.createElement("span");
                 const detail = document.createElement("span");
+                link.className = "site-navigation-feature";
+                icon.className = "site-navigation-icon";
+                icon.setAttribute("aria-hidden", "true");
+                icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${iconMarkup}</svg>`;
+                copy.className = "site-navigation-copy";
+                copy.textContent = label;
+                detail.className = "site-navigation-description";
                 detail.textContent = description;
-                link.append(detail);
+                copy.append(detail);
+                link.replaceChildren(icon, copy);
             }
             row.append(link);
             links.append(row);

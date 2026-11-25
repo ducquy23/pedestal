@@ -26,6 +26,8 @@
     padding: 8px 12px;
     color: var(--text-body, #40566c);
     font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
 }
 
 .site-navigation-card ul {
@@ -50,9 +52,37 @@
     background: var(--overlay, #16354c14);
 }
 
-.site-navigation-card a span {
+.site-navigation-card .site-navigation-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.site-navigation-icon {
+    display: grid;
+    flex: 0 0 36px;
+    height: 36px;
+    place-items: center;
+    border: 1px solid var(--hairline, #16354c14);
+    border-radius: 10px;
+    background: #ebeff3;
+}
+
+.site-navigation-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.site-navigation-copy {
+    font-weight: 500;
+    line-height: 20px;
+}
+
+.site-navigation-description {
     display: block;
     margin-top: 2px;
     color: var(--text-body, #40566c);
     font-size: 13px;
+    font-weight: 400;
+    line-height: 19px;
 }
